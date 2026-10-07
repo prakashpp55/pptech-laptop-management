@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PPTech Computer & Cyber — Laptop Manager</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">PP</div><div><b>PPTech</b><small>Laptop Manager</small></div></div>
+    <nav>
+      <button class="nav active" data-page="dashboard">▣ Dashboard</button>
+      <button class="nav" data-page="inventory">▤ Inventory</button>
+      <button class="nav" data-page="sales">₹ Sales</button>
+      <button class="nav" data-page="customers">♙ Customers</button>
+      <button class="nav" data-page="reports">▥ Reports</button>
+    </nav>
+    <div class="side-note">PPTech Computer & Cyber<br><span>Om Complex, Kumour Chauraha, Pithoragarh</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><button id="mobileMenu" class="iconbtn">☰</button><div><h1 id="pageTitle">Dashboard</h1><p>Second-hand laptop business management</p></div></div>
+      <div class="actions"><button class="btn secondary" id="backupBtn">Export Backup</button><label class="btn secondary filebtn">Import Backup<input type="file" id="restoreInput" accept=".json"></label><button class="btn primary" id="quickAdd">+ Add Laptop</button></div>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="cards">
+        <div class="card"><span>Total Stock</span><strong id="kpiStock">0</strong><small>Currently available</small></div>
+        <div class="card"><span>Sold This Month</span><strong id="kpiSold">0</strong><small>Completed sales</small></div>
+        <div class="card"><span>Monthly Revenue</span><strong id="kpiRevenue">₹0</strong><small>Current month</small></div>
+        <div class="card"><span>Monthly Profit</span><strong id="kpiProfit">₹0</strong><small>Sales − total cost</small></div>
+      </div>
+      <div class="grid2">
+        <div class="panel"><div class="panelhead"><h2>Monthly Sales</h2></div><canvas id="salesChart"></canvas></div>
+        <div class="panel"><div class="panelhead"><h2>Monthly Revenue</h2></div><canvas id="revenueChart"></canvas></div>
+      </div>
+      <div class="grid2">
+        <div class="panel"><div class="panelhead"><h2>Best-Selling Brands</h2></div><canvas id="brandChart"></canvas></div>
+        <div class="panel"><div class="panelhead"><h2>Stock Status</h2></div><canvas id="stockChart"></canvas></div>
+      </div>
+      <div class="panel"><div class="panelhead"><h2>Recent Sales</h2><button class="textbtn" data-page-jump="sales">View all →</button></div><div id="recentSales"></div></div>
+    </section>
+
+    <section id="inventory" class="page">
+      <div class="toolbar"><input id="inventorySearch" class="search" placeholder="Search laptop ID, brand, model, serial..."><select id="inventoryStatus"><option value="">All Status</option><option>Available</option><option>Reserved</option><option>Under Repair</option><option>Sold</option></select><button class="btn primary" id="addLaptopBtn">+ Add Laptop</button></div>
+      <div class="panel tablepanel"><div class="tablewrap"><table><thead><tr><th>ID</th><th>Laptop</th><th>Specs</th><th>Purchase</th><th>Cost</th><th>Sale Price</th><th>Status</th><th>Action</th></tr></thead><tbody id="inventoryBody"></tbody></table></div></div>
+    </section>
+
+    <section id="sales" class="page">
+      <div class="toolbar"><input id="salesSearch" class="search" placeholder="Search invoice, customer, laptop..."><button class="btn primary" id="sellLaptopBtn">+ Record Sale</button></div>
+      <div class="panel tablepanel"><div class="tablewrap"><table><thead><tr><th>Date</th><th>Invoice</th><th>Laptop</th><th>Customer</th><th>Sale Price</th><th>Profit</th><th>Payment</th></tr></thead><tbody id="salesBody"></tbody></table></div></div>
+    </section>
+
+    <section id="customers" class="page">
+      <div class="toolbar"><input id="customerSearch" class="search" placeholder="Search customer name/mobile..."></div>
+      <div class="panel tablepanel"><div class="tablewrap"><table><thead><tr><th>Customer</th><th>Mobile</th><th>Purchases</th><th>Total Spent</th><th>Last Purchase</th></tr></thead><tbody id="customersBody"></tbody></table></div></div>
+    </section>
+
+    <section id="reports" class="page">
+      <div class="cards">
+        <div class="card"><span>Total Investment</span><strong id="rInvestment">₹0</strong></div>
+        <div class="card"><span>Total Sales</span><strong id="rSales">₹0</strong></div>
+        <div class="card"><span>Total Profit</span><strong id="rProfit">₹0</strong></div>
+        <div class="card"><span>Average Profit / Laptop</span><strong id="rAvg">₹0</strong></div>
+      </div>
+      <div class="panel"><div class="panelhead"><h2>Business Summary</h2><button class="btn secondary" id="csvBtn">Download Sales CSV</button></div><div id="reportSummary" class="summary"></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Add Laptop</h2><button class="close" id="closeModal">×</button></div><form id="laptopForm">
+    <div class="formgrid">
+      <label>Laptop ID*<input name="id" required placeholder="LAP-001"></label>
+      <label>Brand*<input name="brand" required placeholder="Dell"></label>
+      <label>Model*<input name="model" required placeholder="Latitude 5420"></label>
+      <label>Serial / Service Tag<input name="serial"></label>
+      <label>Processor<input name="processor" placeholder="Core i5 11th Gen"></label>
+      <label>RAM<input name="ram" placeholder="8 GB"></label>
+      <label>Storage<input name="storage" placeholder="512 GB SSD"></label>
+      <label>Condition<select name="condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Needs Repair</option></select></label>
+      <label>Purchase Date<input name="purchaseDate" type="date"></label>
+      <label>Seller Name<input name="seller"></label>
+      <label>Seller Mobile<input name="sellerMobile"></label>
+      <label>Purchase Price*<input name="purchasePrice" type="number" min="0" required></label>
+      <label>Repair Cost<input name="repairCost" type="number" min="0" value="0"></label>
+      <label>Other Cost<input name="otherCost" type="number" min="0" value="0"></label>
+      <label>Selling Price<input name="sellingPrice" type="number" min="0"></label>
+      <label>Status<select name="status"><option>Available</option><option>Reserved</option><option>Under Repair</option><option>Sold</option></select></label>
+    </div>
+    <label>Notes<textarea name="notes" rows="3"></textarea></label>
+    <div class="modalactions"><button type="button" class="btn secondary" id="cancelModal">Cancel</button><button class="btn primary">Save Laptop</button></div>
+  </form></div>
+</div>
+
+<div class="modal" id="saleModal">
+  <div class="modalbox"><div class="modalhead"><h2>Record Laptop Sale</h2><button class="close" id="closeSale">×</button></div><form id="saleForm">
+    <div class="formgrid">
+      <label>Laptop*<select name="laptopId" id="saleLaptop" required></select></label>
+      <label>Sale Date*<input name="saleDate" type="date" required></label>
+      <label>Invoice No.<input name="invoice" placeholder="INV-001"></label>
+      <label>Customer Name*<input name="customer" required></label>
+      <label>Customer Mobile<input name="mobile"></label>
+      <label>Sale Price*<input name="salePrice" type="number" min="0" required></label>
+      <label>Payment Mode<select name="payment"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Card</option><option>EMI</option></select></label>
+      <label>EMI Provider<input name="emiProvider" placeholder="If applicable"></label>
+      <label>Warranty<input name="warranty" placeholder="30 Days"></label>
+    </div>
+    <label>Notes<textarea name="notes" rows="3"></textarea></label>
+    <div class="modalactions"><button type="button" class="btn secondary" id="cancelSale">Cancel</button><button class="btn primary">Save Sale</button></div>
+  </form></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
